@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cetak Struk</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <main>
+        <section class="struk">
+            <h2>Struk Pembelian</h2>
+            <p>Tanggal: <span id="tanggal"></span></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produk</th>
+                        <th>Harga</th>
+                    </tr>
+                </thead>
+                <tbody id="struk-body"></tbody>
+            </table>
+            <p>Total: Rp <span id="total-struk"></span></p>
+            <button onclick="window.print()" class="btn">Cetak Struk</button>
+        </section>
+    </main>
+    <script>
+        const keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+        const tbody = document.getElementById('struk-body');
+        const totalStruk = document.getElementById('total-struk');
+        const tanggal = document.getElementById('tanggal');
+
+        let total = 0;
+        keranjang.forEach(item => {
+            total += item.harga;
+            tbody.innerHTML += `
+                <tr>
+                    <td>${item.nama}</td>
+                    <td>Rp ${item.harga}</td>
+                </tr>
+            `;
+        });
+        totalStruk.textContent = total;
+        tanggal.textContent = new Date().toLocaleDateString('id-ID');
+    </script>
+</body>
+</html>

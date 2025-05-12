@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Keuangan</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Laporan Keuangan</h1>
+            <nav>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="php/logout.php">Logout</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="laporan">
+            <h2>Laporan Penjualan</h2>
+            <form action="php/laporan.php" method="POST">
+                <label>Tanggal Awal:</label>
+                <input type="date" name="tanggal_awal" required>
+                <label>Tanggal Akhir:</label>
+                <input type="date" name="tanggal_akhir" required>
+                <button type="submit" class="btn">Export Laporan</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

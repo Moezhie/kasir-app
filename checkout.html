@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <img src="assets/images/logo.png" alt="Logo" class="logo">
+            <h1>Checkout</h1>
+            <nav>
+                <a href="index.html">Beranda</a>
+                <a href="produk.html">Produk</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="checkout">
+            <h2>Keranjang Belanja</h2>
+            <table id="keranjang-table">
+                <thead>
+                    <tr>
+                        <th>Produk</th>
+                        <th>Harga</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="keranjang-body"></tbody>
+            </table>
+            <div class="total">
+                <h3>Total: Rp <span id="total-harga">0</span></h3>
+            </div>
+            <div class="kalkulator">
+                <label>Bayar: </label>
+                <input type="number" id="bayar" placeholder="Masukkan jumlah bayar">
+                <button onclick="hitungKembalian()">Hitung Kembalian</button>
+                <p>Kembalian: Rp <span id="kembalian">0</span></p>
+                <p>Terbilang: <span id="terbilang">Nol Rupiah</span></p>
+            </div>
+            <form action="php/transaksi.php" method="POST">
+                <input type="hidden" name="total" id="total-input">
+                <button type="submit" class="btn">Selesaikan Pembayaran</button>
+            </form>
+        </section>
+    </main>
+    <script>
+        let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+        const tbody = document.getElementById('keranjang-body');
+        const totalHarga = document.getElementById('total-harga');
+        const totalInput = document.getElementById('total-input');
+
+        function renderKeranjang() {
+            tbody.innerHTML = '';
+            let total = 0;
+            keranjang.forEach((item, index) => {
+                total += item.harga;
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${item.nama}</td>
+                        <td>Rp ${item.harga}</td>
+                        <td><button onclick="hapusItem(${index})">Hapus</button></td>
+                    </tr>
+                `;
+            });
+            totalHarga.textContent = total;
+            totalInput.value = total;
+        }
+
+        function hapusItem(index) {
+            keranjang.splice(index, 1);
+            localStorage.setItem('keranjang', JSON.stringify(keranjang));
+            renderKeranjang();
+        }
+
+        function hitungKembalian() {
+            const bayar = parseInt(document.getElementById('bayar').value);
+            const total = parseInt(totalHarga.textContent);
+            const kembalian = bayar - total;
+            document.getElementById('kembalian').textContent = kembalian;
+            document.getElementById('terbilang').textContent = terbilang(kembalian);
+        }
+
+        function terbilang(angka) {
+            const satuan = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan"];
+            const belasan = ["", "Sebelas", "Dua Belas", "Tiga Belas", "Empat Belas", "Lima Belas", "Enam Belas", "Tujuh Belas", "Delapan Belas", "Sembilan Belas"];
+            const puluhan = ["", "Sepuluh", "Dua Puluh", "Tiga Puluh", "Empat Puluh", "Lima Puluh", "Enam Puluh", "Tujuh Puluh", "Delapan Puluh", "Sembilan Puluh"];
+            const ribuan = ["", "Ribu", "Juta", "Milyar", "Triliun"];
+
+            if (angka === 0) return "Nol Rupiah";
+            if (angka < 0) return "Minus " + terbilang(Math.abs(angka));
+
+            let kata = "";
+            let i = 0;
+            while (angka > 0) {
+                let n = angka % 1000;
+                if (n > 0) {
+                    let str = "";
+                    if (n < 10) {
+                        str = satuan[n];
+                    } else if (n < 20) {
+                        str = belasan[n - 10];
+                    } else if (n < 100) {
+                        str = puluhan[Math.floor(n / 10)] + (n % 10 !== 0 ? " " + satuan[n % 10] : "");
+                    } else {
+                        str = satuan[Math.floor(n / 100)] + " Ratus" + (n % 100 !== 0 ? " " + terbilang(n % 100) : "");
+                    }
+                    kata = str + (ribuan[i] ? " " + ribuan[i] : "") + (kata ? " " + kata : "");
+                }
+                angka = Math.floor(angka / 1000);
+                i++;
+            }
+            return kata + " Rupiah";
+        }
+
+        renderKeranjang();
+    </script>
+</body>
+</html>

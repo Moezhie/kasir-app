@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Produk</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <img src="assets/images/logo.png" alt="Logo" class="logo">
+            <h1>Katalog Produk</h1>
+            <nav>
+                <a href="index.html">Beranda</a>
+                <a href="produk.html">Produk</a>
+                <a href="checkout.html">Keranjang <i class="fas fa-shopping-cart"></i></a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="produk">
+            <h2>Daftar Produk Pulsa</h2>
+            <div class="produk-grid">
+                <div class="produk-item">
+                    <img src="assets/images/icon-product.png" alt="Pulsa">
+                    <h3>Pulsa Telkomsel 10K</h3>
+                    <p>Harga: Rp 12.000</p>
+                    <button onclick="tambahKeKeranjang('Pulsa Telkomsel 10K', 12000)">Tambah ke Keranjang</button>
+                </div>
+                <div class="produk-item">
+                    <img src="assets/images/icon-product.png" alt="Pulsa">
+                    <h3>Pulsa Indosat 20K</h3>
+                    <p>Harga: Rp 22.000</p>
+                    <button onclick="tambahKeKeranjang('Pulsa Indosat 20K', 22000)">Tambah ke Keranjang</button>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        let keranjang = JSON.parse(localStorage.getItem('keranjang')) || [];
+        
+        function tambahKeKeranjang(nama, harga) {
+            keranjang.push({ nama, harga });
+            localStorage.setItem('keranjang', JSON.stringify(keranjang));
+            alert(`${nama} ditambahkan ke keranjang!`);
+        }
+    </script>
+</body>
+</html>
